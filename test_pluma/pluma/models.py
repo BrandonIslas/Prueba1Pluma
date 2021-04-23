@@ -4,7 +4,7 @@ from django.contrib.gis.db import models
 
 class Test1(models.Model):
     id = models.FloatField(primary_key=True)
-    mpoly = models.MultiPolygonField(srid=4269)
+    mpoly = models.MultiPolygonField(srid=4326)
 
  # Returns the string representation of the model.
     def __float__(self):

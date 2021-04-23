@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
+    'leaflet',
     'pluma',
 ]
 
@@ -82,7 +83,6 @@ DATABASES = {
          'USER': 'geodjango',
          'PASSWORD': '12345',
          'HOST': 'localhost', # the missing piece of the puzzle
-
     },
 }
 
@@ -124,3 +124,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+LEAFLET_CONFIG = {
+    'DEFAULT_CENTER': (19.4978, -99.1269),
+    'DEFAULT_ZOOM': 5,
+    'MAX_ZOOM':20,
+    'MIN_ZOOM':3,
+    'SCALE': 'both',
+    'ATRIBUTION_PREFIX': 'TT-A099',
+}

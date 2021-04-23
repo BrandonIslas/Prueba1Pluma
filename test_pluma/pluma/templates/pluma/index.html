@@ -1,0 +1,30 @@
+{% load static %}
+{% load leaflet_tags %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    {% leaflet_js %}
+    {% leaflet_css %}
+    <meta charset="utf-8">
+    <title> Prueba frontend</title>
+    <style type="text/text/css">
+        #gis{width: 80%;height; 700px;}
+    </style>
+    <script type="text/javascript" src="{% static 'pluma/js/leaflet.ajax.js' %}">
+
+    </script>
+  </head>
+  <body>
+    <h1>Prueba frontend</h1>
+    <br>
+    <br>
+    <script type="text/javascript">
+      function our_layers(map, options){
+        var rutas = new L.GeoJSON.AJAX("{% url 'cargar_rutas' %}",{
+        });
+        rutas.addTo(map);
+      }
+    </script>
+    {% leaflet_map "rutas" callback="window.our_layers" %}
+  </body>
+</html>
