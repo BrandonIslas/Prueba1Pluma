@@ -16,3 +16,12 @@ class Aerovias(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Corridas(models.Model):
+    id = models.CharField(max_length=80, primary_key=True)
+    capa = models.FloatField()
+    geom = models.MultiPolygonField(srid=4326)
+
+    def __str__(self):
+        return self.id

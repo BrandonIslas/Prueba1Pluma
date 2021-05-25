@@ -27,4 +27,12 @@ class Migration(migrations.Migration):
                 ('mpoly', django.contrib.gis.db.models.fields.MultiPolygonField(srid=4326)),
             ],
         ),
+        migrations.CreateModel(
+            name='Corridas',
+            fields=[
+                ('id', models.CharField(max_length=80, primary_key=True, serialize=False)),
+                ('capa', models.FloatField()),
+                ('geom', django.contrib.gis.db.models.fields.MultiPolygonField(srid=4326)),
+            ],
+        ),
     ]

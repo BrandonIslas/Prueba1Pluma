@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponse, redirect
-from .models import Test1, Aerovias
+from .models import Test1, Aerovias, Corridas
 from django.core.serializers import serialize
 
 # Create your views here.
@@ -15,7 +15,7 @@ def cargar_rutas(request):
     return HttpResponse(rutas,content_type='json')
 
 def cargar_pluma(request):
-    pluma = serialize('geojson',Test1.objects.all())
+    pluma = serialize('geojson',Corridas.objects.all())
     return HttpResponse(pluma,content_type='json')
 
 def index(request):
