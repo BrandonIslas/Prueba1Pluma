@@ -130,6 +130,4 @@ LEAFLET_CONFIG = {
     'DEFAULT_ZOOM': 5,
     'MAX_ZOOM':20,
     'MIN_ZOOM':3,
-    'SCALE': 'both',
-    'ATRIBUTION_PREFIX': 'TT-A099',
 }
