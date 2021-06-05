@@ -2,29 +2,130 @@
 {% load leaflet_tags %}
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    {% leaflet_js %}
-    {% leaflet_css %}
-    <meta charset="utf-8">
-    <title> Prueba frontend</title>
-    <style type="text/text/css">
-        #gis{width: 80%;height; 700px;}
-    </style>
-    <script type="text/javascript" src="{% static 'pluma/js/leaflet.ajax.js' %}">
 
-    </script>
-  </head>
-  <body>
-    <h1>Prueba frontend</h1>
-    <br>
-    <br>
-    <script type="text/javascript">
-      function our_layers(map, options){
-        var rutas = new L.GeoJSON.AJAX("{% url 'cargar_rutas' %}",{
+<head>
+  {% leaflet_js %}
+  {% leaflet_css %}
+  <meta charset="utf-8">
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+    }
+  </style>
+
+  <style>
+    #map {
+      width: 800px;
+      height: 500px;
+    }
+
+    .info {
+      padding: 6px 8px;
+      font: 14px/16px Arial, Helvetica, sans-serif;
+      background: white;
+      background: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      border-radius: 5px;
+    }
+
+    .info h4 {
+      margin: 0 0 5px;
+      color: #777;
+    }
+
+    .legend {
+      text-align: left;
+      line-height: 18px;
+      color: #555;
+    }
+
+    .legend i {
+      width: 18px;
+      height: 18px;
+      float: left;
+      margin-right: 8px;
+      opacity: 0.7;
+    }
+  </style>
+  <script type="text/javascript" src="{% static 'pluma/js/leaflet.ajax.js' %}">
+  </script>
+</head>
+
+<body>
+
+  <div id="map">
+    <h1>Prueba Iteraccion Rutas</h1>
+  <script type="text/javascript">
+    function our_layers(map, options) {
+      var myStyle = {
+        "color": "#000000",
+        "weight": 3,
+        "opacity": 0.65
+      };
+
+      var info = L.control();
+
+      info.onAdd = function(map) {
+        this._div = L.DomUtil.create('div', 'info');
+        this.update();
+        return this._div;
+      };
+
+      info.update = function(props,geom) {
+        this._div.innerHTML = '<h4>Ruta:</h4>' + (props ?
+          '<b>' + props.name + '</b><br />' + 'Cooordenas: <p>' + geom.coordinates +'</p>' :
+          'Seleccione una Ruta');
+      };
+
+      info.addTo(map);
+
+      function highlightFeature(e) {
+        var layer = e.target;
+
+        layer.setStyle({
+          weight: 5,
+          color: '#b8ff33',
+          dashArray: '',
+          fillOpacity: 0.7
         });
-        rutas.addTo(map);
+
+        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+          layer.bringToFront();
+        }
+
+        info.update(layer.feature.properties,layer.feature.geometry);
       }
-    </script>
-    {% leaflet_map "rutas" callback="window.our_layers" %}
-  </body>
+
+      var rutas;
+
+      function resetHighlight(e) {
+        rutas.resetStyle(e.target);
+        info.update();
+      }
+
+      function zoomToFeature(e) {
+        map.fitBounds(e.target.getBounds());
+      }
+
+      function onEachFeature(feature, layer) {
+        layer.on({
+          mouseover: highlightFeature,
+          mouseout: resetHighlight,
+          click: zoomToFeature
+        });
+      }
+
+      rutas = new L.GeoJSON.AJAX("{% url 'cargar_rutas' %}", {
+        style: myStyle,
+        onEachFeature: onEachFeature
+      });
+      rutas.addTo(map);
+    }
+  </script>
+</div>
+  {% leaflet_map "rutas" callback="window.our_layers" %}
+</body>
+
 </html>
