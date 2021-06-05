@@ -12,6 +12,7 @@ class Test1(models.Model):
 
 class Aerovias(models.Model):
     name = models.CharField(max_length=80)
+    afectado = models.IntegerField()
     geom = models.MultiLineStringField(srid=4326)
 
     def __str__(self):

@@ -16,6 +16,7 @@ def run(verbose=True):
 
 aerovias_mapping = {
     'name': 'Name',
+    'afectado': 'afectado',
     'geom': 'MULTILINESTRING',
 }
 
