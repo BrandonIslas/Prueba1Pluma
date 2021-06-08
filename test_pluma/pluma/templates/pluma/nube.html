@@ -10,7 +10,8 @@
   <title> Prueba frontend</title>
   <style>
     #map {
-      width: 100%; height: 600px
+      width: 100%;
+      height: 600px
     }
 
     .info {
@@ -80,10 +81,21 @@
         }
       });
       pluma.addTo(map);
-      var myStyle = {
-        "color": "#000000",
-        "weight": 3,
-        "opacity": 0.35
+      var myStyle = function(feature) {
+        console.log(feature);
+        switch (feature.properties.afectado) {
+          case 0:
+            return {
+              color: "#cb0404"
+            };
+          case 1:
+            return {
+              color: "#040404"
+            };
+        }
+        return {
+          color
+        };
       };
       var info = L.control();
 
@@ -118,6 +130,7 @@
         info.update(layer.feature.properties, layer.feature.geometry);
       }
       var rutas;
+
       function resetHighlight(e) {
         rutas.resetStyle(e.target);
         info.update();
@@ -134,16 +147,32 @@
           click: zoomToFeature
         });
       }
-
-      rutas = new L.GeoJSON.AJAX("{% url 'cargar_rutas' %}", {
+      rutas = new L.GeoJSON.AJAX("{% url 'cargar_afectacion' %}", {
         style: myStyle,
         onEachFeature: onEachFeature
       });
       rutas.addTo(map);
+
+      function estiloCircleMarker(feature, latlng) {
+        return L.circleMarker(latlng, {
+          radius: 5.0,
+          fillColor: 'yellow',
+          color: '#000000',
+          weight: 3,
+          opacity: 1.0,
+          fillOpacity: 1.0
+        })
+      }
+
+      var puntos = new L.GeoJSON.AJAX("{% url 'cargar_puntos' %}", {
+        pointToLayer: estiloCircleMarker
+      });
+      puntos.addTo(map);
     }
   </script>
   <div id="map">
-      {% leaflet_map "nube" callback="window.our_layers1" %}
+    {% leaflet_map "nube" callback="window.our_layers1" %}
   </div>
 </body>
+
 </html>

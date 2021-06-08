@@ -1,6 +1,6 @@
 from pathlib import Path
 from django.contrib.gis.utils import LayerMapping
-from .models import Test1, Aerovias, Corridas
+from .models import Test1, Aerovias, Corridas, Puntos
 
 # Auto-generated `LayerMapping` dictionary for Test1 model
 test1_mapping = {
@@ -37,3 +37,17 @@ corridas_shp=Path(__file__).resolve().parent / 'data' / 'pluma_corrida.shp'
 def run3(verbose=True):
     lmc=LayerMapping(Corridas, str(corridas_shp), corridas_mapping, transform=False, encoding='iso-8859-1')
     lmc.save(strict=True, verbose=verbose)
+
+
+puntos_mapping = {
+    'latitud': 'Latitud',
+    'longitud': 'Longitud',
+    'nombre': 'Nombre',
+    'aerovia': 'Aerovia',
+    'geom': 'MULTIPOINT',
+}
+puntos_shp=Path(__file__).resolve().parent / 'data' / 'RadioAyudas.shp'
+
+def run4(verbose=True):
+    lmp=LayerMapping(Puntos, str(puntos_shp), puntos_mapping, transform=False, encoding='iso-8859-1')
+    lmp.save(strict=True, verbose=verbose)

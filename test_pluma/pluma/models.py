@@ -26,3 +26,13 @@ class Corridas(models.Model):
 
     def __str__(self):
         return self.id
+
+class Puntos(models.Model):
+    latitud = models.FloatField()
+    longitud = models.FloatField()
+    nombre = models.CharField(max_length=80)
+    aerovia = models.CharField(max_length=80)
+    geom = models.MultiPointField(srid=4326)
+
+    def __str__(self):
+        return self.nombre

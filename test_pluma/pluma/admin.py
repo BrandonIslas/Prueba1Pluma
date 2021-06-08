@@ -1,6 +1,6 @@
 from leaflet.admin import LeafletGeoAdmin
 from django.contrib.gis import admin
-from .models import Test1, Aerovias, Corridas
+from .models import Test1, Aerovias, Corridas, Puntos
 
 
 class PlumaAdmin(LeafletGeoAdmin):
@@ -12,7 +12,11 @@ class AeroviasAdmin(LeafletGeoAdmin):
 class CorridasAdmin(LeafletGeoAdmin):
     list_display=('id', 'geom')
 
+class PuntosAdmin(LeafletGeoAdmin):
+    list_display=('id', 'geom')
+
 
 admin.site.register(Test1, PlumaAdmin)
 admin.site.register(Aerovias, AeroviasAdmin)
 admin.site.register(Corridas, CorridasAdmin)
+admin.site.register(Puntos, PuntosAdmin)
