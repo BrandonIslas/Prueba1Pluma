@@ -9,4 +9,5 @@ urlpatterns=[
     path('cargar_puntos',views.cargar_puntos, name="cargar_puntos"),
     path('cargar_afectacion', views.afectacion, name="cargar_afectacion"),
     path('pluma', views.index),
+    path('generate_pdf', views.generate_pdf, name="generate_pdf"),
 ]

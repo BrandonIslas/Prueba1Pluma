@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+        * {
+            color: black;
+        }
+
+        body {
+            font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
+            padding: 0;
+            margin: 0;
+            color: black;
+        }
+
+        .name-company {
+            font-size: 30px;
+            padding: 0;
+            margin: 0;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        table thead tr th {
+            border: 1px solid black !important;
+            padding: 3px;
+        }
+
+        table tbody tr td {
+            border: 1px solid black;
+            padding: 3px;
+        }
+
+        .img-logo {
+            margin-top: 10px;
+            width: 75px;
+            height: 75px;
+            margin-bottom: 10px;
+        }
+
+    </style>
+    
+</head>
+<body>
+<div class="container-fluid">
+    <h1 class="name-company">Corrida </h1>
+    <p class="text-center">
+        En este archivo se hace resumen de la corrida  generada por el prototipo, recibiendo como parametro un archivo Shapefile<br>
+    </p>
+    <p>
+        {% for aerov in Rutas_Afectadas %}
+          <b>Ruta Afectada:</b> {{ aerov }}<br>
+        {% endfor %}
+        {% for aero in Coordenadas_Afectadas %}
+          <b>Coordenadas Aerovia Afectada:</b> {{ aero }}<br>
+        {% endfor %}
+    </p>
+</div>
+</body>
+</html>

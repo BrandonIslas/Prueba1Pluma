@@ -12,6 +12,11 @@ import mplleaflet as mpl
 from shapely.ops import *
 import json
 from pathlib import Path
+import os
+from django.conf import settings
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from django.contrib.staticfiles import finders
 
 
 # Create your views here.
@@ -56,3 +61,36 @@ def afectacion(request):
 
 def index(request):
     return render(request, 'pluma/feed.html')
+
+def generate_pdf(request):
+    template = get_template('pluma/pdf.html')
+    rutas = serialize('geojson',Aerovias.objects.all())
+    pluma = serialize('geojson',Corridas.objects.all())
+    #Revision de afectacion
+    aero = gpd.read_file(rutas)
+    test = gpd.read_file(pluma)
+    afectado = []
+    coordenadas =[]
+    for i in range(len(aero)):
+        for j in range(len(test)):
+            if aero.iloc[i,3].intersection(test.iloc[j,2]).is_empty == False:
+                afectado.append(aero.iloc[i,0])
+                #aero.iloc[i,1]=0
+    consult=list(set(afectado))
+    for i in range(0,len(consult)):
+        query= Aerovias.objects.get(name=consult[i])
+        coordenadas.append(query.geom.coords)
+
+
+    context={'Rutas_Afectadas': consult,
+    'Coordenadas_Afectadas': coordenadas}
+    html = template.render(context)
+    response = HttpResponse(content_type='application/pdf')
+    #response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+    # create a pdf
+    pisa_status = pisa.CreatePDF(
+       html, dest=response)
+    # if error then show some funy view
+    if pisa_status.err:
+       return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response

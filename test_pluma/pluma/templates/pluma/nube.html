@@ -7,7 +7,7 @@
   {% leaflet_js %}
   {% leaflet_css %}
   <meta charset="utf-8">
-  <title> Prueba frontend</title>
+  <title> Corrida 1</title>
   <style>
     #map {
       width: 100%;
@@ -44,6 +44,11 @@
   </style>
   <script type="text/javascript" src="{% static 'pluma/js/leaflet.ajax.js' %}">
   </script>
+
+
+  <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-image/v0.0.4/leaflet-image.js'></script>
+
+
 </head>
 
 <body>
@@ -52,7 +57,6 @@
     function our_layers1(map, options) {
       var pluma = new L.GeoJSON.AJAX("{% url 'cargar_pluma' %}", {
         style: function(feature) {
-          console.log(feature);
           switch (feature.properties.capa) {
             case 1:
               return {
@@ -82,7 +86,6 @@
       });
       pluma.addTo(map);
       var myStyle = function(feature) {
-        console.log(feature);
         switch (feature.properties.afectado) {
           case 0:
             return {
@@ -168,7 +171,9 @@
         pointToLayer: estiloCircleMarker
       });
       puntos.addTo(map);
+
     }
+
   </script>
   <div id="map">
     {% leaflet_map "nube" callback="window.our_layers1" %}
