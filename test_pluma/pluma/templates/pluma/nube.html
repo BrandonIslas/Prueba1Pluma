@@ -14,11 +14,14 @@
       height: 600px
     }
 
+    .leaflet-container-default {
+      min-height: 600px;
+    }
+
     .info {
       padding: 6px 8px;
       font: 14px/16px Arial, Helvetica, sans-serif;
-      background: white;
-      background: rgba(255, 255, 255, 0.8);
+      background: black;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
       border-radius: 5px;
     }
@@ -44,15 +47,34 @@
   </style>
   <script type="text/javascript" src="{% static 'pluma/js/leaflet.ajax.js' %}">
   </script>
-
-
-  <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-image/v0.0.4/leaflet-image.js'></script>
-
-
+  <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-image/v0.0.4/leaflet-image.js'></script>
+  <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}" />
+  <link href="{% static 'pluma/css/styles.css' %}" rel="stylesheet" />
+  <!-- Core theme CSS (includes Bootstrap)-->
+  <script src="{% static 'pluma/js/scripts.js' %}"></script>
 </head>
 
 <body>
-  <h1>Corrida 1</h1>
+  {% include 'pluma/navbar.html' %}
+
+  {% block content %}
+  {%endblock%}
+  <div class="container-fluid text-center menu-section" id="menu">
+    <div class="container d-flex h-80 align-items-center">
+      <div class="mx-auto text-center text-white">
+        <h1>Corrida 1</h1>
+        <p>Ejecuciòn de archivo: GIS_18000_24925_01.shp </p>
+        <div style="width: 1000px; height: 2000px;">
+          {% leaflet_map "nube" callback="window.our_layers1" %}
+
+          <a href="{% url 'generate_pdf' %}" class="btn btn-warning">Generar PDF</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <br>
+
   <script type="text/javascript">
     function our_layers1(map, options) {
       var pluma = new L.GeoJSON.AJAX("{% url 'cargar_pluma' %}", {
@@ -171,13 +193,8 @@
         pointToLayer: estiloCircleMarker
       });
       puntos.addTo(map);
-
     }
-
   </script>
-  <div id="map">
-    {% leaflet_map "nube" callback="window.our_layers1" %}
-  </div>
 </body>
 
 </html>
