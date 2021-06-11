@@ -1,71 +1,80 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>PDF Generado</title>
-    <style>
+  <meta charset="UTF-8">
+  <title>PDF Generado</title>
+  <style>
+    * {
+      color: black;
+    }
 
-        * {
-            color: black;
-        }
+    body {
+      font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
+      padding: 0;
+      margin: 0;
+      color: black;
+    }
 
-        body {
-            font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
-            padding: 0;
-            margin: 0;
-            color: black;
-        }
+    .name-company {
+      font-size: 30px;
+      padding: 0;
+      margin: 0;
+      font-weight: bold;
+      text-transform: uppercase;
+      text-align: center;
+    }
 
-        .name-company {
-            font-size: 30px;
-            padding: 0;
-            margin: 0;
-            font-weight: bold;
-            text-transform: uppercase;
-            text-align: center;
-        }
+    table thead tr th {
+      border: 1px solid black !important;
+      padding: 3px;
+    }
 
-        table thead tr th {
-            border: 1px solid black !important;
-            padding: 3px;
-        }
+    table tbody tr td {
+      border: 1px solid black;
+      padding: 3px;
+    }
 
-        table tbody tr td {
-            border: 1px solid black;
-            padding: 3px;
-        }
-
-        .img-logo {
-            margin-top: 10px;
-            width: 75px;
-            height: 75px;
-            margin-bottom: 10px;
-        }
-
-    </style>
+    .img-logo {
+      margin-top: 10px;
+      width: 75px;
+      height: 75px;
+      margin-bottom: 10px;
+    }
+  </style>
 
 </head>
+
 <body>
-<div class="container-fluid">
+  <div class="container-fluid">
     <h1 class="name-company">Corrida </h1>
     <p class="text-center">
-        En este archivo se hace resumen de la corrida  generada por el prototipo, recibiendo como parametro un archivo Shapefile<br>
+      En este archivo se hace resumen de la corrida generada por el prototipo, recibiendo como parametro un archivo Shapefile<br>
     </p>
     <p>
-        {% for aerov in Rutas_Afectadas %}
-          <b>Ruta Afectada:</b> {{ aerov }}<br>
-        {% endfor %}
-        {% for aero in Coordenadas_Afectadas %}
-          <b>Coordenadas Aerovia Afectada:</b> {{ aero }}<br>
-        {% endfor %}
+      {% for aerov in Rutas_Afectadas %}
+      <b>Ruta Afectada:</b> {{ aerov }}<br>
+      {% endfor %}
+      {% for aero in Coordenadas_Afectadas %}
+      <b>Coordenadas Aerovia Afectada:</b> {{ aero }}<br>
+      {% endfor %}
     </p>
-    <br>
-    <br>
-    <p>
-      <b>Pluma:</b>
-      <img src="{{imagen1}}">
-    </p>
-</div>
+  </div>
+  {% load img_to_base64 %}
+  <div class="card justify-content-center" style=".name-company: 18rem;">
+    <img src="{{imagen1}}" class="card-img-top ">
+    <div class="card-body">
+      <h5 class="card-title">Corrida de Pluma.</h5>
+    </div>
+  </div>
+
+  <div class="card justify-content-center" style=".name-company: 18rem;">
+    <img src="{{imagen2}}" class="card-img-top ">
+    <div class="card-body">
+      <h5 class="card-title">Resultado final.</h5>
+    </div>
+  </div>
 </body>
+
 </html>

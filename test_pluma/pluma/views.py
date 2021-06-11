@@ -22,7 +22,7 @@ from django.conf import settings
 
 # Create your views here.
 def inicio(request):
-    return render(request, "pluma/index.html")
+    return render(request, "pluma/pdf.html")
 
 # Create your views here.
 def nube(request):
@@ -63,7 +63,7 @@ def afectacion(request):
 def index(request):
     return render(request, 'pluma/feed.html')
 
-def link_callback(uri, rel):
+def link_call(uri, rel):
     result = finders.find(uri)
     if result:
         if not isinstance(result, (list, tuple)):
@@ -121,14 +121,14 @@ def generate_pdf(request):
 
     context={'Rutas_Afectadas': consult,
     'Coordenadas_Afectadas': coordenadas,
-    'imagen1': '{}{}'.format(settings.MEDIA_URL, 'test.png')}
+    'imagen1': Path(__file__).resolve().parent / 'media' / 'pdf' / 'test.png',
+    'imagen2': Path(__file__).resolve().parent / 'media' / 'pdf' / 'ima.png'}
     html = template.render(context)
     response = HttpResponse(content_type='application/pdf')
     #response['Content-Disposition'] = 'attachment; filename="report.pdf"'
     # create a pdf
     pisa_status = pisa.CreatePDF(
-       html, dest=response,
-       link_callback=link_callback)
+       html, dest=response)
     # if error then show some funy view
     if pisa_status.err:
        return HttpResponse('We had some errors <pre>' + html + '</pre>')
