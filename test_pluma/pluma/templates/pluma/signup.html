@@ -1,0 +1,54 @@
+{% extends "pluma/base.html" %}
+
+{% block head_content %}
+<title>Sign-up</title>
+{% endblock %}
+
+{% block container %}
+<div class="masthead">
+    <div class="container h-100">
+        <div class="row h-100 justify-content-center align-items-center">
+            <div class="col-sm-12 col-md-5 col-lg-5 pt-2 pl-5 pr-5 pb-5" id="auth-container">
+
+                <h4 class="mb-4">Sign-up!</h4>
+                {% if error %}
+                    <p class="alert alert-danger">{{ error }}</p>
+                {% endif %}
+
+                <form method="POST" action="{% url "signup" %}"  enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <input class="form-control" type="text" placeholder="Username" name="username" required="true" />
+                    </div>
+
+                    <div class="form-group">
+                        <input class="form-control" type="password" placeholder="Password" name="password" required="true" />
+                    </div>
+
+                    <div class="form-group">
+                        <input class="form-control" type="password" placeholder="Password confirmation" name="password_confirmation" required="true" />
+                    </div>
+
+                    <div class="form-group">
+                        <input class="form-control" type="text" placeholder="First name" name="first_name" required="true" />
+                    </div>
+
+                    <div class="form-group">
+                        <input class="form-control" type="text" placeholder="Last name" name="last_name" required="true" />
+                    </div>
+
+                    <div class="form-group">
+                        <input class="form-control" type="email" placeholder="Email address" name="email" required="true" />
+                    </div>
+
+                    <button class="btn btn-primary btn-block mt-5" type="submit">Register!</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

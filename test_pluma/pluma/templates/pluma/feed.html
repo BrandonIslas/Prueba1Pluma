@@ -1,35 +1,43 @@
 {%extends "pluma/base.html"%}
 
+{% block head_content %}
 
-{% block content %}
+<title>VULCANAZE</title>
+<body id="page-top">
+
+{% endblock %}
+
+{% block container %}
 
         <!-- Masthead-->
-        <header class="masthead">
+        <div class="masthead">
             <div class="container d-flex h-100 align-items-center">
                 <div class="mx-auto text-center">
-                    <h1 class="mx-auto my-0 text-uppercase">Vulcanaze</h1>
-                    <h2 class="text-white-50 mx-auto mt-2 mb-5">A free software to monotorize Vulcans</h2>
+                    <h1 class="mx-auto my-3 text-uppercase">Vulcanaze</h1>
+                    <h2 class="text-white-50 mx-auto mt-2 mb-5">Use this software in order to minimize aeronautical risks due to volcanic ash</h2>
                     <a class="btn btn-primary js-scroll-trigger" href="#menu">Get Started</a>
                 </div>
             </div>
-        </header>
+        </div>
         <div class="container-fluid text-center menu-section" id="menu">
             <div class="row content">
               <div class="col-sm-4 sidenav">
                   <br>
-                  <button type="button" class="btn btn-primary btn-lg btn-block" href="pluma_form.html">MANUAL</button>
+                  <h3 class="text-white">LOAD SHAPEFILE</h3>
+
+                  <input type="file" name="shape" class="btn btn-primary btn-lg btn-block"></input>
+
                   <br>
 
                   <br>
-                  <button type="button" class="btn btn-primary btn-lg btn-block">AUTOMATICO</button>
+                  <h3 class="text-white">GET SHAPEFILE</h3>
+                  <a type="button" class="btn btn-primary btn-lg btn-block" href="https://www.ready.noaa.gov/hyreg-bin/dispsrc.pl?category=Volcanic_ash" target="_blank">CLICK HERE!</a>
                   <br>
               </div>
               <div class="col-sm-8 text-left text-white">
-                <h1>Welcome</h1>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                <h3>Welcome</h3>
+                <p>A web application able to project within a map the dispersion of volcanic ash gotten from shapefile</p>
                 <hr>
-                <h3>Test</h3>
-                <p>Lorem ipsum...</p>
               </div>
             </div>
         </div>
