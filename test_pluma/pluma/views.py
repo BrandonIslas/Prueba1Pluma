@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponse, redirect, HttpResponseRedirec
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
-from .models import Test1, Aerovias, Corridas, Puntos
+from .models import Test1, Aerovias, Corridas, Puntos, RutasMulti, RutasIndv
 from django.core.serializers import serialize
 import pandas as pd
 from shapely.geometry import Point, LineString, shape, MultiLineString
@@ -45,7 +45,7 @@ def nube(request):
     return render(request, "pluma/nube.html")
 
 def cargar_rutas(request):
-    rutas = serialize('geojson',Aerovias.objects.all())
+    rutas = serialize('geojson',RutasIndv.objects.all())
     return HttpResponse(rutas,content_type='json')
 
 def cargar_pluma(request):
@@ -57,20 +57,22 @@ def cargar_puntos(request):
     return HttpResponse(puntos, content_type='json')
 
 def afectacion(request):
-    rutas = serialize('geojson',Aerovias.objects.all())
+    rutas = serialize('geojson',RutasIndv.objects.all())
     pluma = serialize('geojson',Corridas.objects.all())
     #Revision de afectacion
     aero = gpd.read_file(rutas)
     test = gpd.read_file(pluma)
     afectado = []
+    print(list(aero))
     for i in range(len(aero)):
         for j in range(len(test)):
             if aero.iloc[i,3].intersection(test.iloc[j,2]).is_empty == False:
                 afectado.append(aero.iloc[i,0])
                 #aero.iloc[i,1]=0
     consult=list(set(afectado))
+    print(consult)
     for i in range(0,len(consult)):
-        query= Aerovias.objects.get(name=consult[i])
+        query= RutasIndv.objects.get(name=consult[i])
         query.afectado=0
         query.save()
 
@@ -108,7 +110,7 @@ def link_call(uri, rel):
 
 def generate_pdf(request):
     template = get_template('pluma/pdf.html')
-    rutas = serialize('geojson',Aerovias.objects.all())
+    rutas = serialize('geojson',RutasIndv.objects.all())
     pluma = serialize('geojson',Corridas.objects.all())
     punt= serialize('geojson',Puntos.objects.all())
     #Revision de afectacion
@@ -124,7 +126,7 @@ def generate_pdf(request):
                 #aero.iloc[i,1]=0
     consult=list(set(afectado))
     for i in range(0,len(consult)):
-        query= Aerovias.objects.get(name=consult[i])
+        query= RutasIndv.objects.get(name=consult[i])
         coordenadas.append(query.geom.coords)
     plt.style.use('dark_background')
     figsize= (50,40)

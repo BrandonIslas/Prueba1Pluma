@@ -1,6 +1,6 @@
 from leaflet.admin import LeafletGeoAdmin
 from django.contrib.gis import admin
-from .models import Test1, Aerovias, Corridas, Puntos
+from .models import Test1, Aerovias, Corridas, Puntos, RutasMulti, RutasIndv
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 #Models
 from django.contrib.auth.models import User
@@ -34,8 +34,16 @@ class CorridasAdmin(LeafletGeoAdmin):
 class PuntosAdmin(LeafletGeoAdmin):
     list_display=('id', 'geom')
 
+class AeroAdmin(LeafletGeoAdmin):
+    list_display=('name', 'geom')
+
+class AeroIAdmin(LeafletGeoAdmin):
+    list_display=('name', 'geom')
+
 
 admin.site.register(Test1, PlumaAdmin)
 admin.site.register(Aerovias, AeroviasAdmin)
 admin.site.register(Corridas, CorridasAdmin)
 admin.site.register(Puntos, PuntosAdmin)
+admin.site.register(RutasMulti, AeroAdmin)
+admin.site.register(RutasIndv, AeroIAdmin)

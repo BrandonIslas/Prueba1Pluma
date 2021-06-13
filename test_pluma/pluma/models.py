@@ -36,3 +36,19 @@ class Puntos(models.Model):
 
     def __str__(self):
         return self.nombre
+
+class RutasMulti(models.Model):
+    name = models.CharField(max_length=80)
+    afectado = models.BigIntegerField()
+    geom = models.MultiLineStringField(srid=4326)
+
+    def __str__(self):
+        return self.name
+
+class RutasIndv(models.Model):
+    name = models.CharField(max_length=80)
+    afectado = models.BigIntegerField()
+    geom = models.MultiLineStringField(srid=4326)
+
+    def __str__(self):
+        return self.name

@@ -1,6 +1,6 @@
 from pathlib import Path
 from django.contrib.gis.utils import LayerMapping
-from .models import Test1, Aerovias, Corridas, Puntos
+from .models import Test1, Aerovias, Corridas, Puntos, RutasMulti, RutasIndv
 
 # Auto-generated `LayerMapping` dictionary for Test1 model
 test1_mapping = {
@@ -51,3 +51,26 @@ puntos_shp=Path(__file__).resolve().parent / 'data' / 'RadioAyudas.shp'
 def run4(verbose=True):
     lmp=LayerMapping(Puntos, str(puntos_shp), puntos_mapping, transform=False, encoding='iso-8859-1')
     lmp.save(strict=True, verbose=verbose)
+
+rutasmulti_mapping = {
+    'name': 'Name',
+    'afectado': 'afectado',
+    'geom': 'MULTILINESTRING',
+}
+aero_shp=Path(__file__).resolve().parent / 'data' / 'aerovias_mexico_F.shp'
+
+def run5(verbose=True):
+    lmam=LayerMapping(RutasMulti, str(aero_shp), rutasmulti_mapping, transform=False, encoding='iso-8859-1')
+    lmam.save(strict=True, verbose=verbose)
+
+rutasindv_mapping = {
+    'name': 'Name',
+    'afectado': 'afectado',
+    'geom': 'MULTILINESTRING',
+}
+
+aeroi_shp=Path(__file__).resolve().parent / 'data' / 'aerovias_mexico_I.shp'
+
+def run6(verbose=True):
+    lmai=LayerMapping(RutasIndv, str(aeroi_shp), rutasindv_mapping, transform=False, encoding='iso-8859-1')
+    lmai.save(strict=True, verbose=verbose)

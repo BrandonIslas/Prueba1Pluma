@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns=[
+    path('', views.cargar_rutas, name="cargar_rutas"),
     path('test',views.inicio, name="inicio"),
     path('nube',views.nube, name="nube"),
     path('cargar_rutas',views.cargar_rutas, name="cargar_rutas"),

@@ -43,7 +43,7 @@
           })
         }
 
-        var puntos = new L.GeoJSON.AJAX("{% url 'cargar_puntos' %}", {
+        var puntos = new L.GeoJSON.AJAX("{% url 'cargar_rutas' %}", {
           pointToLayer: estiloCircleMarker
         });
         puntos.addTo(map);
