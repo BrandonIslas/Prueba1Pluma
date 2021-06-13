@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from .models import Archivos
 
 class SignupForm(forms.Form):
     """Sign up form."""
@@ -52,3 +53,8 @@ class SignupForm(forms.Form):
         data.pop('password_confirmation')
 
         user = User.objects.create_user(**data)
+
+class SubidaArchivosForm(forms.ModelForm):
+    class Meta:
+        model= Archivos
+        fields= '__all__'

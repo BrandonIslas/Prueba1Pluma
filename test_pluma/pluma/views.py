@@ -2,7 +2,8 @@ from django.shortcuts import render, HttpResponse, redirect, HttpResponseRedirec
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
-from .models import Test1, Aerovias, Corridas, Puntos, RutasMulti, RutasIndv
+from .models import Test1, Aerovias, Corridas, Puntos, RutasMulti, RutasIndv, Archivos
+from .forms import SubidaArchivosForm
 from django.core.serializers import serialize
 import pandas as pd
 from shapely.geometry import Point, LineString, shape, MultiLineString
@@ -223,3 +224,18 @@ def formulario3(request):
         return render(request, 'Pluma/pluma_form3.html')
     else:
         return render(request, 'Pluma/pluma_form3.html')
+
+def subidaArchivos(request):
+    form = SubidaArchivosForm(data=request.POST or None, files= request.FILES or None )
+    context={
+        "form": form
+    }
+    if form.is_valid():
+        form.save()
+        archivo_shp= form.cleaned_data.get("archivo_shp")
+        archivo_sdbf= form.cleaned_data.get("archivo_sdbf")
+        archivo_shx= form.cleaned_data.get("archivo_shx")
+        archivo_prj= form.cleaned_data.get("archivo_prj")
+        archivo_cpg= form.cleaned_data.get("archivo_cpg")
+
+    return render(request, "pluma/nube.html", context)

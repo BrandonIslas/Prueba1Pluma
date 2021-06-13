@@ -52,3 +52,11 @@ class RutasIndv(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Archivos(models.Model):
+    archivo_shp= models.FileField(upload_to='corridas', blank=True, null=True)
+    archivo_sdbf= models.FileField(upload_to='corridas', blank=True, null=True)
+    archivo_shx= models.FileField(upload_to='corridas', blank=True, null=True)
+    archivo_prj= models.FileField(upload_to='corridas', blank=True, null=True)
+    archivo_cpg= models.FileField(upload_to='corridas', blank=True, null=True)

@@ -11,6 +11,7 @@ urlpatterns=[
     path('cargar_afectacion', views.afectacion, name="cargar_afectacion"),
     path('pluma', views.index),
     path('generate_pdf', views.generate_pdf, name="generate_pdf"),
+    path('test_archivos', views.subidaArchivos, name="test_archivos"),
     path(
         route = 'index/',
         view = views.index,
