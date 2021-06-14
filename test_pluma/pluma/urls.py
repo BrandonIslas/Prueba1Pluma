@@ -12,6 +12,8 @@ urlpatterns=[
     path('pluma', views.index),
     path('generate_pdf', views.generate_pdf, name="generate_pdf"),
     path('test_archivos', views.subidaArchivos, name="test_archivos"),
+    path('test_ruta', views.RutaOptima, name="test_ruta"),
+    path('optima', views.optima, name="optima"),
     path(
         route = 'index/',
         view = views.index,

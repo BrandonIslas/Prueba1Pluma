@@ -117,6 +117,10 @@
             return {
               color: "#040404"
             };
+          case 2:
+            return {
+              color: "#00cc00"
+            };
         }
         return {
           color
@@ -172,7 +176,7 @@
           click: zoomToFeature
         });
       }
-      rutas = new L.GeoJSON.AJAX("{% url 'cargar_afectacion' %}", {
+      rutas = new L.GeoJSON.AJAX("{% url 'test_ruta' %}", {
         style: myStyle,
         onEachFeature: onEachFeature
       });

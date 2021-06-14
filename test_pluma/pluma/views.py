@@ -24,6 +24,9 @@ from django.contrib.staticfiles import finders
 from django.conf import settings
 import requests
 import urllib
+from django.template import RequestContext
+import networkx as nx
+from geopandas import GeoDataFrame
 
 # Models
 from django.contrib.auth.models import User
@@ -44,6 +47,9 @@ def inicio(request):
 # Create your views here.
 def nube(request):
     return render(request, "pluma/nube.html")
+# Create your views here.
+def optima(request):
+    return render(request, "pluma/ruta_optima.html")
 
 def cargar_rutas(request):
     rutas = serialize('geojson',RutasIndv.objects.all())
@@ -238,4 +244,213 @@ def subidaArchivos(request):
         archivo_prj= form.cleaned_data.get("archivo_prj")
         archivo_cpg= form.cleaned_data.get("archivo_cpg")
 
-    return render(request, "pluma/nube.html", context)
+        return redirect('nube')
+
+    return render(request, "pluma/prueba.html", context)
+
+def RutaOptima(request):
+    rutas = serialize('geojson',RutasIndv.objects.all())
+    pluma = serialize('geojson',Corridas.objects.all())
+    #Leemos shapefile
+    df2=gpd.read_file(rutas)
+    filasshape=df2.shape[0]
+
+    #Creatmos el dataframe a partir del archivo xls y obtenemos el número filas
+    df = pd.read_excel('pluma/dataset-dijkstra.xlsx')
+    filas=df.shape[0]
+
+    #Dataframe original
+    dfdatos = pd.read_excel('pluma/aero.xls')
+    filasdatos = dfdatos.shape[0]
+
+
+    nuevopeso=pd.DataFrame()
+    nuevopeso=nuevopeso.assign(Nombre=None)
+    nuevopeso=nuevopeso.assign(Nombre2=None)
+
+    print(df2.head())
+
+    nombrepeso1=""
+    nombrepeso2=""
+    conpeso=0
+
+    for i in range (filasshape):
+
+        afectado = df2.iloc[i,1]
+
+        if(afectado==0):
+
+            linea=df2.iloc[i,3]
+            #print(list(linea[0].coords))
+            coordsradio = list(linea[0].coords)
+
+            latradio1 = coordsradio[0][1];
+            lonradio1 = coordsradio[0][0];
+
+            latradio1=round(latradio1,10)
+            lonradio1=round(lonradio1,10)
+
+            latradio2 = coordsradio[1][1];
+            lonradio2 = coordsradio[1][0];
+
+            latradio2=round(latradio2,10)
+            lonradio2=round(lonradio2,10)
+            #print(latradio1, lonradio1)
+            bandera=0;
+
+            for j in range (filasdatos):
+
+                item1 = np.float64(dfdatos.loc[j][0])
+                latpeso = round(item1.item(),10)
+
+                item2 = np.float64(dfdatos.loc[j][1])
+                lonpeso = round(item2.item(),10)
+
+                if (latpeso==latradio1 and lonpeso==lonradio1):
+                    print("XDDDDDD")
+                    nombrepeso1= dfdatos.loc[j][4]
+                    break
+
+            for j in range (filasdatos):
+
+                item1 = np.float64(dfdatos.loc[j][0])
+                latpeso = round(item1.item(),10)
+
+                item2 = np.float64(dfdatos.loc[j][1])
+                lonpeso = round(item2.item(),10)
+
+                if (latpeso==latradio2 and lonpeso==lonradio2):
+                    print("XDDDDDD2")
+                    nombrepeso2= dfdatos.loc[j][4]
+                    break
+
+            nuevopeso.loc[conpeso] = [nombrepeso1, nombrepeso2]
+            conpeso += 1
+
+
+    print(nuevopeso)
+    filasnuevopeso = nuevopeso.shape[0]
+
+    for i in range(filasnuevopeso):
+        nombremodificar1 = nuevopeso.loc[i][0]
+        nombremodificar2 = nuevopeso.loc[i][1]
+
+        for j in range(filas):
+            radio1 = df.loc[j][0]
+            radio2 = df.loc[j][1]
+
+            if(nombremodificar1 == radio1 and nombremodificar2 == radio2 ):
+                df.iloc[j,2]=50000
+                break
+            elif(nombremodificar1 == radio2 and nombremodificar2 == radio1 ):
+                df.iloc[j, 2] = 50000
+                break
+
+    print(df)
+    #Creamos la lista de vértices o el grafo.
+    espacioAereo = nx.from_pandas_edgelist(df,source='Aero1',target='Aero2',edge_attr='Peso')
+
+    print("Posibilidades")
+    #print(espacioAereo.edges())
+    print("\n")
+
+    datafinal=pd.DataFrame()
+    datafinal=datafinal.assign(Nombre=None)
+    datafinal=datafinal.assign(Latitud=None)
+    datafinal=datafinal.assign(Longitud=None)
+
+    try:
+        djk_path=nx.dijkstra_path(espacioAereo, source='UJ15-12', target='UJ39-3', weight='Peso')
+        djknum=len(djk_path)
+
+        bandera=0;
+        for i in range(djknum):
+            if(bandera==1):
+                break
+            nombreRA = djk_path[i]
+            for j in range(filasnuevopeso):
+                nombreafectado1 = nuevopeso.loc[j][0]
+                nombreafectado2 = nuevopeso.loc[j][1]
+
+                if(nombreRA == nombreafectado1 or nombreRA == nombreafectado2 ):
+                    bandera=1
+                    break
+
+
+        if (bandera == 1):
+            print("No existe una ruta alterna para el origen y destino seleccionados")
+        else:
+
+            contador = 0
+            for i in range(djknum):
+                for j in range(filasdatos):
+
+                    if (djk_path[i] == dfdatos.loc[j][4]):
+                        nomb = djk_path[i]
+                        lat = dfdatos.loc[j][0]
+                        lon = dfdatos.loc[j][1]
+                        datafinal.loc[contador] = [nomb, lat, lon]
+                        contador += 1
+                        break
+
+            print(datafinal)
+
+            for i in range(djknum-1):
+
+                item1 = np.float64(datafinal.loc[i][1])
+                latnat1 = item1.item()
+
+                item2 = np.float64(datafinal.loc[i][2])
+                lonnat1 = item2.item()
+
+                item1 = np.float64(datafinal.loc[i+1][1])
+                latnat2 = item1.item()
+
+                item2 = np.float64(datafinal.loc[i+1][2])
+                lonnat2 = item2.item()
+
+                latnat1=round(latnat1,6)
+                lonnat1=round(lonnat1,6)
+
+                latnat2=round(latnat2,6)
+                lonnat2=round(lonnat2,6)
+
+
+                for j in range(filasshape):
+                    linea=df2.iloc[j,3]
+                    #print(list(linea[0].coords))
+                    coordsradio = list(linea[0].coords)
+
+                    latradio1 = coordsradio[0][1];
+                    lonradio1 = coordsradio[0][0];
+                    latradio1=round(latradio1,6)
+                    lonradio1=round(lonradio1,6)
+
+                    latradio2 = coordsradio[1][1];
+                    lonradio2 = coordsradio[1][0];
+                    latradio2=round(latradio2,6)
+                    lonradio2=round(lonradio2,6)
+
+
+                    if (latnat1 == latradio1 and lonnat1 == lonradio1):
+                        if(latnat2 == latradio2 and lonnat2 == lonradio2):
+                            df2.iloc[j, 1] = 2
+
+                    elif (latnat1 == latradio2 and lonnat1 == lonradio2):
+                        if (latnat2 == latradio1 and lonnat2 == lonradio1):
+                            df2.iloc[j, 1] = 2
+            print(djk_path)
+            afectado = []
+            for i in range(len(df2)):
+                if(df2.loc[i][1] == 2):
+                    afectado.append(df2.iloc[i, 0])
+            print(afectado)
+            for i in range(len(afectado)):
+                query= RutasIndv.objects.get(name=afectado[i])
+                query.afectado=2
+                query.save()
+            df2.to_excel(r'rutaalterna.xlsx', index=False)
+    except Exception as E:
+        return HttpResponseRedirect('cargar_rutas')
+        print(E)
+    return HttpResponseRedirect('cargar_rutas')
