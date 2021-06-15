@@ -135,6 +135,10 @@ def generate_pdf(request):
     for i in range(0,len(consult)):
         query= RutasIndv.objects.get(name=consult[i])
         coordenadas.append(query.geom.coords)
+    optimo = []
+    for i in range(len(aero)):
+        if(aero.loc[i][1] == 2):
+            optimo.append(aero.iloc[i, 0])
     plt.style.use('dark_background')
     figsize= (50,40)
     test.plot(cmap='plasma')
@@ -146,6 +150,7 @@ def generate_pdf(request):
 
     context={'Rutas_Afectadas': consult,
     'Coordenadas_Afectadas': coordenadas,
+    'Ruta_Optima': optimo,
     'imagen1': Path(__file__).resolve().parent / 'media' / 'pdf' / 'test.png',
     'imagen2': Path(__file__).resolve().parent / 'media' / 'pdf' / 'ima.png'}
     html = template.render(context)
@@ -243,7 +248,18 @@ def subidaArchivos(request):
         archivo_shx= form.cleaned_data.get("archivo_shx")
         archivo_prj= form.cleaned_data.get("archivo_prj")
         archivo_cpg= form.cleaned_data.get("archivo_cpg")
-
+        rutas = serialize('geojson',RutasIndv.objects.all())
+        #Revision de afectacion
+        aero = gpd.read_file(rutas)
+        afectado = []
+        for i in range(len(aero)):
+            if(aero.loc[i][1] == 2 or  aero.loc[i][1] == 0):
+                afectado.append(aero.iloc[i, 0])
+        print(afectado)
+        for i in range(len(afectado)):
+            query= RutasIndv.objects.get(name=afectado[i])
+            query.afectado=1
+            query.save()
         return redirect('nube')
 
     return render(request, "pluma/prueba.html", context)
@@ -360,7 +376,7 @@ def RutaOptima(request):
     datafinal=datafinal.assign(Longitud=None)
 
     try:
-        djk_path=nx.dijkstra_path(espacioAereo, source='UJ15-12', target='UJ39-3', weight='Peso')
+        djk_path=nx.dijkstra_path(espacioAereo, source='UJ33-16', target='UJ33-18', weight='Peso')
         djknum=len(djk_path)
 
         bandera=0;

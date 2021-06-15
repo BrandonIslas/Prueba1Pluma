@@ -73,6 +73,15 @@
     <img src="{{imagen2}}" class="card-img-top ">
     <div class="card-body">
       <h5 class="card-title">Resultado final.</h5>
+      <p>
+        <b>Ruta Optima:</b><br>
+        {% for opti in Ruta_Optima %}
+        <p>{{ opti }} -></p>
+        {% endfor %}
+      </p>
+      {% for ropt in Coordenas_Ruta_Optima %}
+      <b>Coordenadas Ruta Optima:</b> {{ ropt }}<br>
+      {% endfor %}
     </div>
   </div>
 </body>
