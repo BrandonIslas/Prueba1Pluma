@@ -60,3 +60,7 @@ class Archivos(models.Model):
     archivo_shx= models.FileField(upload_to='corridas', blank=True, null=True)
     archivo_prj= models.FileField(upload_to='corridas', blank=True, null=True)
     archivo_cpg= models.FileField(upload_to='corridas', blank=True, null=True)
+
+class OrigenDestino(models.Model):
+    origen = models.CharField(max_length=10)
+    destino= models.CharField(max_length=10)

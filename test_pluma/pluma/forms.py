@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Archivos
+from .models import Archivos, OrigenDestino
 
 class SignupForm(forms.Form):
     """Sign up form."""
@@ -58,3 +58,8 @@ class SubidaArchivosForm(forms.ModelForm):
     class Meta:
         model= Archivos
         fields= '__all__'
+
+class OrigenDestinoForm(forms.ModelForm):
+    class Meta:
+        model=OrigenDestino
+        fields='__all__'

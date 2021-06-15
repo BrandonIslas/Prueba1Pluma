@@ -265,6 +265,13 @@ def subidaArchivos(request):
     return render(request, "pluma/prueba.html", context)
 
 def RutaOptima(request):
+    form = OrigenDestinoForm(data=request.POST or None, files= request.FILES or None )
+    context={
+        "form": form
+    }
+    if form.is_valid():
+        origen= form.cleaned_data.get("origen")
+        destino= form.cleaned_data.get("destino")
     rutas = serialize('geojson',RutasIndv.objects.all())
     pluma = serialize('geojson',Corridas.objects.all())
     #Leemos shapefile
