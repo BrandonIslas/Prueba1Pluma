@@ -32,7 +32,7 @@ corridas_mapping = {
     'capa': 'Capa',
     'geom': 'MULTIPOLYGON',
 }
-corridas_shp=Path(__file__).resolve().parent / 'data' / 'pluma_corrida1.shp'
+corridas_shp=Path(__file__).resolve().parent / 'data' / 'pluma_corrida2.shp'
 
 def run3(verbose=True):
     lmc=LayerMapping(Corridas, str(corridas_shp), corridas_mapping, transform=False, encoding='iso-8859-1')

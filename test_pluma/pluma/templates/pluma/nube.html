@@ -62,13 +62,27 @@
   <div class="container-fluid text-center menu-section" id="menu">
     <div class="container d-flex h-80 align-items-center">
       <div class="mx-auto text-center text-white">
-        <h1>Corrida 1</h1>
-        <p>Ejecuciòn de archivo: {{filename}} </p>
+        <h1>Vulcanaze run</h1>
         <div style="width: 1000px; height: 2000px;">
           {% leaflet_map "nube" callback="window.our_layers1" %}
 
-          <a href="{% url 'generate_pdf' %}" class="btn btn-warning">Generar PDF</a>
-          <a href="{% url 'optima' %}" class="btn btn-warning">RUTA ALTERNA</a>
+          <a href="{% url 'generate_pdf' %}" class="btn btn-primary btn-block mt-5">GENERATE PDF</a>
+          <br>
+
+          <form method="POST" action="{% url "test_ruta" %}"  enctype="multipart/form-data">
+              {% csrf_token %}
+
+              <div class="form-group">
+                  <input class="form-control" type="text" placeholder="Origin" name="origen" required="true" />
+              </div>
+
+              <div class="form-group">
+                  <input class="form-control" type="text" placeholder="Destination" name="destino" required="true" />
+              </div>
+
+              <button class="btn btn-primary btn-block mt-5" type="submit">OPTIMAL ROUTE</button>
+
+          </form>
         </div>
 
       </div>

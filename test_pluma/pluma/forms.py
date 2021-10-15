@@ -63,3 +63,12 @@ class OrigenDestinoForm(forms.ModelForm):
     class Meta:
         model=OrigenDestino
         fields='__all__'
+
+    def clean(self):
+        """Verify password confirmation match."""
+        data = super().clean()
+
+        oringen = data['origen']
+        destino = data['destino']
+
+        return data
